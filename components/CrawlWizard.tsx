@@ -24,8 +24,8 @@ export type CrawlData = {
     crawlFrequency: "daily" | "weekly" | "monthly"
     useCrest: boolean
     prerenderPages: boolean
-    limitTo: string[]
-    excludeUrls: string[]
+    limitTo: string[] // Add this line
+    excludeUrls: string[] // Add this line
     collectResources: {
       htmlPages: boolean
       codeStyleFiles: boolean
@@ -33,11 +33,6 @@ export type CrawlData = {
       errorPages: boolean
       redirectionPages: boolean
     }
-    crawlDepth: number
-    skipContentTypeCheck: boolean
-    skipExistingResources: boolean
-    useEtags: boolean
-    simultaneousRequests: number
   }
 }
 
@@ -54,7 +49,6 @@ export function CrawlWizard({ isOpen, onClose }: CrawlWizardProps) {
     checkNewPages: false,
     specificPages: [],
     excludedPages: [],
-    sitemapFile: undefined,
     additionalSettings: {
       userAgent: "",
       sessionCookie: "",
@@ -63,8 +57,8 @@ export function CrawlWizard({ isOpen, onClose }: CrawlWizardProps) {
       crawlFrequency: "weekly",
       useCrest: false,
       prerenderPages: false,
-      limitTo: [],
-      excludeUrls: [],
+      limitTo: [], // Add this line
+      excludeUrls: [], // Add this line
       collectResources: {
         htmlPages: true,
         codeStyleFiles: false,
@@ -72,11 +66,6 @@ export function CrawlWizard({ isOpen, onClose }: CrawlWizardProps) {
         errorPages: false,
         redirectionPages: false,
       },
-      crawlDepth: 0,
-      skipContentTypeCheck: false,
-      skipExistingResources: false,
-      useEtags: false,
-      simultaneousRequests: 1
     },
   })
 
@@ -100,6 +89,12 @@ export function CrawlWizard({ isOpen, onClose }: CrawlWizardProps) {
   ]
 
   const CurrentStepComponent = steps[currentStep - 1].component
+  const currentStepDescription = {
+    1: "Choose between discovering your site or extracting content for translation.",
+    2: "Define the scope of your crawl and set limits.",
+    3: "Configure crawl settings and scheduling.",
+    4: "Review and confirm your crawl configuration.",
+  }[currentStep]
 
   const updateCrawlData = (newData: Partial<CrawlData>) => {
     setCrawlData((prevData) => ({ ...prevData, ...newData }))
@@ -115,7 +110,7 @@ export function CrawlWizard({ isOpen, onClose }: CrawlWizardProps) {
         <div className="flex h-[85vh]">
           {/* Sidebar */}
           <div className="w-80 bg-gray-50 border-r border-gray-100">
-            <ProgressBar currentStep={currentStep} steps={steps} />
+            <ProgressBar currentStep={currentStep} totalSteps={steps.length} steps={steps} />
           </div>
 
           {/* Main content */}
