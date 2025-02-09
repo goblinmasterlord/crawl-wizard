@@ -3,11 +3,10 @@ import { cn } from "@/lib/utils"
 
 interface ProgressBarProps {
   currentStep: number
-  totalSteps: number
   steps: Array<{ title: string }>
 }
 
-export function ProgressBar({ currentStep, totalSteps, steps }: ProgressBarProps) {
+export function ProgressBar({ currentStep, steps }: ProgressBarProps) {
   return (
     <div className="py-6">
       <div className="px-6">
