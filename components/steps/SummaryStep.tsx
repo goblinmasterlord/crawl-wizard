@@ -145,7 +145,7 @@ export function SummaryStep({ crawlData, onEdit }: SummaryStepProps) {
                   <h4 className="text-sm font-medium text-gray-900 mb-2">Resource collection</h4>
                   <ul className="space-y-1">
                     {Object.entries(crawlData.additionalSettings.collectResources)
-                      .filter(([_, enabled]) => enabled)
+                      .filter(([, enabled]) => enabled)
                       .map(([key]) => (
                         <li key={key} className="flex items-center text-sm text-gray-600">
                           <svg className="w-4 h-4 mr-2 text-green-500" viewBox="0 0 20 20" fill="currentColor">
