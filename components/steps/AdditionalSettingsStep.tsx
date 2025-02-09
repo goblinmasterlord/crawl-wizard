@@ -33,22 +33,20 @@ export function AdditionalSettingsStep({ crawlData, updateCrawlData }: Additiona
       additionalSettings: {
         ...crawlData.additionalSettings,
         prerenderPages: !crawlData.additionalSettings.prerenderPages,
-        useCrest: !crawlData.additionalSettings.prerenderPages || crawlData.additionalSettings.useCrest,
       },
     })
   }
 
-  const toggleUseCrest = (checked: boolean) => {
+  const toggleUseCrest = () => {
     updateCrawlData({
       additionalSettings: {
         ...crawlData.additionalSettings,
-        useCrest: checked,
-        prerenderPages: checked ? crawlData.additionalSettings.prerenderPages : false,
+        useCrest: !crawlData.additionalSettings.useCrest,
       },
     })
   }
 
-  const toggleResourceCollection = (resource: keyof CrawlData["additionalSettings"]["collectResources"]) => {
+  const handleResourceToggle = (resource: keyof CrawlData["additionalSettings"]["collectResources"]) => {
     updateCrawlData({
       additionalSettings: {
         ...crawlData.additionalSettings,
@@ -75,6 +73,17 @@ export function AdditionalSettingsStep({ crawlData, updateCrawlData }: Additiona
       })
     }
   }, [crawlData.additionalSettings.useCrest]);
+
+  useEffect(() => {
+    if (!crawlData.additionalSettings.useCrest && crawlData.additionalSettings.prerenderPages) {
+      updateCrawlData({
+        additionalSettings: {
+          ...crawlData.additionalSettings,
+          prerenderPages: false,
+        },
+      })
+    }
+  }, [crawlData.additionalSettings.useCrest, crawlData.additionalSettings.prerenderPages, updateCrawlData])
 
   return (
     <div className="space-y-8">
@@ -104,7 +113,7 @@ export function AdditionalSettingsStep({ crawlData, updateCrawlData }: Additiona
                       <Checkbox
                         id="collectHtmlPages"
                         checked={crawlData.additionalSettings.collectResources.htmlPages}
-                        onCheckedChange={() => toggleResourceCollection("htmlPages")}
+                        onCheckedChange={() => handleResourceToggle("htmlPages")}
                       />
                       <label htmlFor="collectHtmlPages" className="text-sm text-gray-600">
                         HTML Pages
@@ -123,7 +132,7 @@ export function AdditionalSettingsStep({ crawlData, updateCrawlData }: Additiona
                       <Checkbox
                         id="collectCodeStyleFiles"
                         checked={crawlData.additionalSettings.collectResources.codeStyleFiles}
-                        onCheckedChange={() => toggleResourceCollection("codeStyleFiles")}
+                        onCheckedChange={() => handleResourceToggle("codeStyleFiles")}
                       />
                       <label htmlFor="collectCodeStyleFiles" className="text-sm text-gray-600">
                         JavaScript & CSS Files
@@ -149,7 +158,7 @@ export function AdditionalSettingsStep({ crawlData, updateCrawlData }: Additiona
                       <Checkbox
                         id="collectImagesFiles"
                         checked={crawlData.additionalSettings.collectResources.imagesFiles}
-                        onCheckedChange={() => toggleResourceCollection("imagesFiles")}
+                        onCheckedChange={() => handleResourceToggle("imagesFiles")}
                       />
                       <label htmlFor="collectImagesFiles" className="text-sm text-gray-600">
                         Images & Media
@@ -168,7 +177,7 @@ export function AdditionalSettingsStep({ crawlData, updateCrawlData }: Additiona
                       <Checkbox
                         id="collectErrorPages"
                         checked={crawlData.additionalSettings.collectResources.errorPages}
-                        onCheckedChange={() => toggleResourceCollection("errorPages")}
+                        onCheckedChange={() => handleResourceToggle("errorPages")}
                       />
                       <label htmlFor="collectErrorPages" className="text-sm text-gray-600">
                         Error Pages (4XX)
@@ -187,7 +196,7 @@ export function AdditionalSettingsStep({ crawlData, updateCrawlData }: Additiona
                       <Checkbox
                         id="collectRedirectionPages"
                         checked={crawlData.additionalSettings.collectResources.redirectionPages}
-                        onCheckedChange={() => toggleResourceCollection("redirectionPages")}
+                        onCheckedChange={() => handleResourceToggle("redirectionPages")}
                       />
                       <label htmlFor="collectRedirectionPages" className="text-sm text-gray-600">
                         Redirect Pages (3XX)
