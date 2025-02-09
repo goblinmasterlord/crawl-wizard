@@ -24,8 +24,13 @@ export type CrawlData = {
     crawlFrequency: "daily" | "weekly" | "monthly"
     useCrest: boolean
     prerenderPages: boolean
-    limitTo: string[] // Add this line
-    excludeUrls: string[] // Add this line
+    limitTo: string[]
+    excludeUrls: string[]
+    crawlDepth: number
+    skipContentTypeCheck: boolean
+    skipExistingResources: boolean
+    useEtags: boolean
+    simultaneousRequests: number
     collectResources: {
       htmlPages: boolean
       codeStyleFiles: boolean
@@ -49,6 +54,7 @@ export function CrawlWizard({ isOpen, onClose }: CrawlWizardProps) {
     checkNewPages: false,
     specificPages: [],
     excludedPages: [],
+    sitemapFile: undefined,
     additionalSettings: {
       userAgent: "",
       sessionCookie: "",
@@ -57,8 +63,13 @@ export function CrawlWizard({ isOpen, onClose }: CrawlWizardProps) {
       crawlFrequency: "weekly",
       useCrest: false,
       prerenderPages: false,
-      limitTo: [], // Add this line
-      excludeUrls: [], // Add this line
+      limitTo: [],
+      excludeUrls: [],
+      crawlDepth: 0,
+      skipContentTypeCheck: true,
+      skipExistingResources: false,
+      useEtags: false,
+      simultaneousRequests: 4,
       collectResources: {
         htmlPages: true,
         codeStyleFiles: false,
@@ -90,10 +101,10 @@ export function CrawlWizard({ isOpen, onClose }: CrawlWizardProps) {
 
   const CurrentStepComponent = steps[currentStep - 1].component
   const currentStepDescription = {
-    1: "Choose between discovering your site or extracting content for translation.",
-    2: "Define the scope of your crawl and set limits.",
-    3: "Configure crawl settings and scheduling.",
-    4: "Review and confirm your crawl configuration.",
+    1: "Choose based on where you are in your translation process",
+    2: "Select which pages to crawl on your site",
+    3: "Configure additional crawl settings",
+    4: "Review your crawl configuration",
   }[currentStep]
 
   const updateCrawlData = (newData: Partial<CrawlData>) => {
@@ -119,7 +130,10 @@ export function CrawlWizard({ isOpen, onClose }: CrawlWizardProps) {
             <div className="px-8 py-6 border-b border-gray-100">
               <div className="max-w-3xl mx-auto">
                 <h1 className="text-xl font-semibold text-gray-900">Crawl Wizard</h1>
-                <h2 className="mt-2 text-lg text-gray-700">{steps[currentStep - 1].title}</h2>
+                <div className="mt-2">
+                  <h2 className="text-lg text-gray-700">{steps[currentStep - 1].title}</h2>
+                  <p className="mt-1 text-sm text-gray-500">{currentStepDescription}</p>
+                </div>
               </div>
             </div>
 

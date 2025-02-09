@@ -22,7 +22,6 @@ const AdvancedTag = () => (
       </svg>
       Advanced
     </span>
-    <span className="text-xs text-gray-500">For power users</span>
   </div>
 );
 

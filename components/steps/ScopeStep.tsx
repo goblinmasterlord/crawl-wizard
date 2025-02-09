@@ -18,9 +18,8 @@ const AdvancedTag = () => (
       <svg className="w-3 h-3 mr-1" viewBox="0 0 20 20" fill="currentColor">
         <path fillRule="evenodd" d="M11.49 3.17c-.38-1.56-2.6-1.56-2.98 0a1.532 1.532 0 01-2.286.948c-1.372-.836-2.942.734-2.106 2.106.54.886.061 2.042-.947 2.287-1.561.379-1.561 2.6 0 2.978a1.532 1.532 0 01.947 2.287c-.836 1.372.734 2.942 2.106 2.106a1.532 1.532 0 012.287.947c.379 1.561 2.6 1.561 2.978 0a1.533 1.533 0 012.287-.947c1.372.836 2.942-.734 2.106-2.106a1.533 1.533 0 01.947-2.287c1.561-.379 1.561-2.6 0-2.978a1.532 1.532 0 01-.947-2.287c.836-1.372-.734-2.942-2.106-2.106a1.532 1.532 0 01-2.287-.947zM10 13a3 3 0 100-6 3 3 0 000 6z" clipRule="evenodd" />
       </svg>
-      Advanced
+      For power users
     </span>
-    <span className="text-xs text-gray-500">For power users</span>
   </div>
 );
 
@@ -112,19 +111,50 @@ export function ScopeStep({ crawlData, updateCrawlData }: ScopeStepProps) {
             </p>
           </div>
 
-          <div
-            className={cn(
-              "p-6 border-l-4 border border-gray-200 cursor-pointer transition-all",
-              crawlData.scope === "specific" 
-                ? "border-l-blue-600 bg-blue-50/50 border-gray-300" 
-                : "border-l-gray-200 hover:shadow-[0_2px_8px_rgba(0,0,0,0.08)] hover:border-gray-300"
+          <div>
+            <div
+              className={cn(
+                "p-6 border-l-4 border border-gray-200 cursor-pointer transition-all",
+                crawlData.scope === "specific" 
+                  ? "border-l-blue-600 bg-blue-50/50 border-gray-300" 
+                  : "border-l-gray-200 hover:shadow-[0_2px_8px_rgba(0,0,0,0.08)] hover:border-gray-300"
+              )}
+              onClick={() => handleScopeChange("specific")}
+            >
+              <h3 className="text-lg font-medium mb-3">Select specific pages</h3>
+              <p className="text-sm text-gray-600 leading-relaxed">
+                Choose exactly which pages to crawl. Best for targeting specific sections.
+              </p>
+            </div>
+            
+            {crawlData.scope === "specific" && (
+              <div className="mt-4 space-y-4">
+                <div className="p-4 border border-gray-200 bg-white">
+                  <h4 className="text-sm font-medium text-gray-700 mb-3">Pages to crawl</h4>
+                  <textarea
+                    value={crawlData.specificPages.join("\n")}
+                    onChange={handleSpecificPagesChange}
+                    placeholder="https://example.com/page1&#10;https://example.com/page2"
+                    className="w-full h-32 p-2 border border-gray-200 text-sm"
+                  />
+                  <p className="text-xs text-gray-500">Enter one URL per line</p>
+                </div>
+
+                <div className="p-4 border border-gray-200 bg-white">
+                  <h4 className="text-sm font-medium text-gray-700 mb-3">Upload sitemap</h4>
+                  <input
+                    type="file"
+                    accept=".xml,.txt"
+                    onChange={handleSitemapUpload}
+                    className="block w-full text-sm text-gray-500
+                      file:mr-4 file:py-2 file:px-4
+                      file:border-0 file:text-sm file:font-medium
+                      file:bg-blue-50 file:text-blue-700
+                      hover:file:bg-blue-100"
+                  />
+                </div>
+              </div>
             )}
-            onClick={() => handleScopeChange("specific")}
-          >
-            <h3 className="text-lg font-medium mb-3">Select specific pages</h3>
-            <p className="text-sm text-gray-600 leading-relaxed">
-              Choose exactly which pages to crawl. Best for targeting specific sections.
-            </p>
           </div>
         </div>
       </section>
@@ -200,7 +230,7 @@ export function ScopeStep({ crawlData, updateCrawlData }: ScopeStepProps) {
           </div>
         )}
 
-        {crawlData.scope === "specific" && (
+        {crawlData.scope === "all" && (
           <div className="p-4 border border-gray-200 bg-white">
             <div className="flex justify-between items-center mb-3">
               <h4 className="text-sm font-medium text-gray-700">Excluded pages</h4>
@@ -225,35 +255,6 @@ export function ScopeStep({ crawlData, updateCrawlData }: ScopeStepProps) {
               </>
             )}
           </div>
-        )}
-
-        {crawlData.scope === "specific" && (
-          <>
-            <div className="p-4 border border-gray-200 bg-white">
-              <h4 className="text-sm font-medium text-gray-700 mb-3">Pages to crawl</h4>
-              <textarea
-                value={crawlData.specificPages.join("\n")}
-                onChange={handleSpecificPagesChange}
-                placeholder="https://example.com/page1&#10;https://example.com/page2"
-                className="w-full h-32 p-2 border border-gray-200 text-sm"
-              />
-              <p className="text-xs text-gray-500">Enter one URL per line</p>
-            </div>
-
-            <div className="p-4 border border-gray-200 bg-white">
-              <h4 className="text-sm font-medium text-gray-700 mb-3">Upload sitemap</h4>
-              <input
-                type="file"
-                accept=".xml,.txt"
-                onChange={handleSitemapUpload}
-                className="block w-full text-sm text-gray-500
-                  file:mr-4 file:py-2 file:px-4
-                  file:border-0 file:text-sm file:font-medium
-                  file:bg-blue-50 file:text-blue-700
-                  hover:file:bg-blue-100"
-              />
-            </div>
-          </>
         )}
       </section>
 
