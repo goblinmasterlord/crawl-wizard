@@ -73,26 +73,28 @@ export function CrawlWizard({ isOpen, onClose }: CrawlWizardProps) {
     {
       title: "Type",
       component: CrawlTypeStep,
-      description: "Choose between discovering your site or extracting content for translation.",
     },
     {
       title: "Scope",
       component: ScopeStep,
-      description: "Define the scope of your crawl and set limits.",
     },
     {
       title: "Settings",
       component: AdditionalSettingsStep,
-      description: "Configure crawl settings and scheduling.",
     },
     {
       title: "Review",
       component: SummaryStep,
-      description: "Review and confirm your crawl configuration.",
     },
   ]
 
   const CurrentStepComponent = steps[currentStep - 1].component
+  const currentStepDescription = {
+    1: "Choose between discovering your site or extracting content for translation.",
+    2: "Define the scope of your crawl and set limits.",
+    3: "Configure crawl settings and scheduling.",
+    4: "Review and confirm your crawl configuration.",
+  }[currentStep]
 
   const updateCrawlData = (newData: Partial<CrawlData>) => {
     setCrawlData((prevData) => ({ ...prevData, ...newData }))
@@ -104,18 +106,51 @@ export function CrawlWizard({ isOpen, onClose }: CrawlWizardProps) {
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="max-w-5xl p-0 overflow-hidden">
-        <div className="flex h-[80vh]">
-          <div className="w-1/5 bg-gray-100 p-4">
+      <DialogContent className="max-w-6xl p-0">
+        <div className="flex h-[85vh]">
+          {/* Sidebar */}
+          <div className="w-80 bg-gray-50 border-r border-gray-100">
+            <div className="p-6 border-b border-gray-100">
+              <h1 className="text-xl font-semibold text-gray-900">Crawl Wizard</h1>
+              <p className="mt-1 text-sm text-gray-500">Configure your website crawl</p>
+            </div>
             <ProgressBar currentStep={currentStep} totalSteps={steps.length} steps={steps} />
           </div>
-          <div className="w-4/5 p-6 overflow-y-auto">
-            <h1 className="text-2xl font-bold mb-2 text-gray-800">Crawl Wizard</h1>
-            <p className="text-gray-600 mb-6">{steps[currentStep - 1].description}</p>
-            <div className="mb-6">
-              <CurrentStepComponent crawlData={crawlData} updateCrawlData={updateCrawlData} onEdit={goToStep} />
+
+          {/* Main content */}
+          <div className="flex-1 flex flex-col bg-white">
+            {/* Header */}
+            <div className="px-8 py-6 border-b border-gray-100">
+              <div className="max-w-3xl mx-auto">
+                <h2 className="text-lg font-medium text-gray-900">
+                  {steps[currentStep - 1].title}
+                </h2>
+                <p className="mt-1 text-sm text-gray-500">{currentStepDescription}</p>
+              </div>
             </div>
-            <StepNavigation currentStep={currentStep} totalSteps={steps.length} onNext={nextStep} onPrev={prevStep} />
+
+            {/* Step content */}
+            <div className="flex-1 overflow-y-auto px-8 py-6">
+              <div className="max-w-3xl mx-auto">
+                <CurrentStepComponent 
+                  crawlData={crawlData} 
+                  updateCrawlData={updateCrawlData} 
+                  onEdit={goToStep} 
+                />
+              </div>
+            </div>
+
+            {/* Footer */}
+            <div className="px-8 py-4 border-t border-gray-100 bg-white">
+              <div className="max-w-3xl mx-auto">
+                <StepNavigation 
+                  currentStep={currentStep} 
+                  totalSteps={steps.length} 
+                  onNext={nextStep} 
+                  onPrev={prevStep} 
+                />
+              </div>
+            </div>
           </div>
         </div>
       </DialogContent>
