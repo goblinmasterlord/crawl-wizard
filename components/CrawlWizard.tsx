@@ -122,7 +122,7 @@ export function CrawlWizard({ isOpen, onClose }: CrawlWizardProps) {
             {/* Header */}
             <div className="px-8 py-6 border-b border-gray-100">
               <div className="max-w-3xl mx-auto">
-                <h2 className="text-lg font-medium text-gray-900">
+                <h2 className="text-xl font-semibold text-gray-900">
                   {steps[currentStep - 1].title}
                 </h2>
                 <p className="mt-1 text-sm text-gray-500">{currentStepDescription}</p>

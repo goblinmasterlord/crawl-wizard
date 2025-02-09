@@ -8,21 +8,20 @@ interface CrawlTypeStepProps {
 
 export function CrawlTypeStep({ crawlData, updateCrawlData }: CrawlTypeStepProps) {
   return (
-    <div>
-      <h2 className="text-xl font-semibold mb-6 text-gray-800">Select crawl type</h2>
+    <div className="space-y-6">
       <div className="space-y-4">
         <div
           className={cn(
             "p-6 border-l-4 border border-gray-200 cursor-pointer transition-all",
-            crawlData.crawlType === "discovery"
-              ? "border-l-blue-600 bg-blue-50/50 border-gray-300 hover:border-gray-400"
+            crawlData.crawlType === "discovery" 
+              ? "border-l-blue-600 bg-blue-50/50 border-gray-300" 
               : "border-l-gray-200 hover:shadow-[0_2px_8px_rgba(0,0,0,0.08)] hover:border-gray-300"
           )}
           onClick={() => updateCrawlData({ crawlType: "discovery" })}
         >
           <div className="flex justify-between items-start mb-3">
-            <h3 className="text-lg font-medium">Discover your site</h3>
-            <span className="px-2.5 py-1 bg-green-100 text-green-800 text-xs font-medium">
+            <h3 className="text-lg font-medium">Discovery crawl</h3>
+            <span className="px-2.5 py-1 bg-green-100 text-green-800 text-xs font-medium rounded-sm">
               Free
             </span>
           </div>
@@ -41,14 +40,14 @@ export function CrawlTypeStep({ crawlData, updateCrawlData }: CrawlTypeStepProps
           className={cn(
             "p-6 border-l-4 border border-gray-200 cursor-pointer transition-all",
             crawlData.crawlType === "content-extraction" 
-              ? "border-l-blue-600 bg-blue-50/50" 
-              : "border-l-gray-200"
+              ? "border-l-blue-600 bg-blue-50/50 border-gray-300" 
+              : "border-l-gray-200 hover:shadow-[0_2px_8px_rgba(0,0,0,0.08)] hover:border-gray-300"
           )}
           onClick={() => updateCrawlData({ crawlType: "content-extraction" })}
         >
           <div className="flex justify-between items-start mb-3">
-            <h3 className="text-lg font-medium">Extract content for translation</h3>
-            <span className="px-2.5 py-1 bg-yellow-100 text-yellow-800 text-xs font-medium">
+            <h3 className="text-lg font-medium">Content extraction</h3>
+            <span className="px-2.5 py-1 bg-yellow-100 text-yellow-800 text-xs font-medium rounded-sm">
               Uses Quota
             </span>
           </div>

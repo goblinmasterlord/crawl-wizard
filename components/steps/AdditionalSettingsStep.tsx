@@ -33,20 +33,22 @@ export function AdditionalSettingsStep({ crawlData, updateCrawlData }: Additiona
       additionalSettings: {
         ...crawlData.additionalSettings,
         prerenderPages: !crawlData.additionalSettings.prerenderPages,
+        useCrest: !crawlData.additionalSettings.prerenderPages || crawlData.additionalSettings.useCrest,
       },
     })
   }
 
-  const toggleUseCrest = () => {
+  const toggleUseCrest = (checked: boolean) => {
     updateCrawlData({
       additionalSettings: {
         ...crawlData.additionalSettings,
-        useCrest: !crawlData.additionalSettings.useCrest,
+        useCrest: checked,
+        prerenderPages: checked ? crawlData.additionalSettings.prerenderPages : false,
       },
     })
   }
 
-  const handleResourceToggle = (resource: keyof CrawlData["additionalSettings"]["collectResources"]) => {
+  const toggleResourceCollection = (resource: keyof CrawlData["additionalSettings"]["collectResources"]) => {
     updateCrawlData({
       additionalSettings: {
         ...crawlData.additionalSettings,
@@ -74,17 +76,6 @@ export function AdditionalSettingsStep({ crawlData, updateCrawlData }: Additiona
     }
   }, [crawlData.additionalSettings.useCrest]);
 
-  useEffect(() => {
-    if (!crawlData.additionalSettings.useCrest && crawlData.additionalSettings.prerenderPages) {
-      updateCrawlData({
-        additionalSettings: {
-          ...crawlData.additionalSettings,
-          prerenderPages: false,
-        },
-      })
-    }
-  }, [crawlData.additionalSettings.useCrest, crawlData.additionalSettings.prerenderPages, updateCrawlData])
-
   return (
     <div className="space-y-8">
       <div className="bg-white border border-gray-200 rounded-lg shadow-sm">
@@ -104,113 +95,74 @@ export function AdditionalSettingsStep({ crawlData, updateCrawlData }: Additiona
               </TooltipProvider>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 p-4 bg-gray-50 rounded-lg">
-              <div className="space-y-3">
-                <h4 className="text-sm font-semibold text-gray-700">Main Content</h4>
-                <div className="space-y-2">
-                  <TooltipProvider>
-                    <div className="flex items-center space-x-2">
-                      <Checkbox
-                        id="collectHtmlPages"
+            <div className="p-6 border border-gray-200 bg-white space-y-6">
+              <div className="grid grid-cols-2 gap-6">
+                <div className="space-y-4">
+                  <h4 className="text-sm font-medium text-gray-700">Content resources</h4>
+                  <div className="space-y-3">
+                    <label className="flex items-start space-x-3">
+                      <input
+                        type="checkbox"
                         checked={crawlData.additionalSettings.collectResources.htmlPages}
-                        onCheckedChange={() => handleResourceToggle("htmlPages")}
+                        onChange={(e) => toggleResourceCollection("htmlPages")}
+                        className="mt-0.5 h-4 w-4 text-blue-600 border-gray-300"
                       />
-                      <label htmlFor="collectHtmlPages" className="text-sm text-gray-600">
-                        HTML Pages
-                      </label>
-                      <Tooltip>
-                        <TooltipTrigger asChild>
-                          <span className="text-sm text-gray-500 cursor-help">ⓘ</span>
-                        </TooltipTrigger>
-                        <TooltipContent>
-                          <p>Collect the main web pages that contain your translatable content.</p>
-                        </TooltipContent>
-                      </Tooltip>
-                    </div>
-
-                    <div className="flex items-center space-x-2">
-                      <Checkbox
-                        id="collectCodeStyleFiles"
-                        checked={crawlData.additionalSettings.collectResources.codeStyleFiles}
-                        onCheckedChange={() => handleResourceToggle("codeStyleFiles")}
-                      />
-                      <label htmlFor="collectCodeStyleFiles" className="text-sm text-gray-600">
-                        JavaScript & CSS Files
-                      </label>
-                      <Tooltip>
-                        <TooltipTrigger asChild>
-                          <span className="text-sm text-gray-500 cursor-help">ⓘ</span>
-                        </TooltipTrigger>
-                        <TooltipContent>
-                          <p>Collect JavaScript, CSS, and other code files that may contain translatable text (e.g., error messages, UI labels).</p>
-                        </TooltipContent>
-                      </Tooltip>
-                    </div>
-                  </TooltipProvider>
-                </div>
-              </div>
-
-              <div className="space-y-3">
-                <h4 className="text-sm font-semibold text-gray-700">Additional Resources</h4>
-                <div className="space-y-2">
-                  <TooltipProvider>
-                    <div className="flex items-center space-x-2">
-                      <Checkbox
-                        id="collectImagesFiles"
-                        checked={crawlData.additionalSettings.collectResources.imagesFiles}
-                        onCheckedChange={() => handleResourceToggle("imagesFiles")}
-                      />
-                      <label htmlFor="collectImagesFiles" className="text-sm text-gray-600">
-                        Images & Media
-                      </label>
-                      <Tooltip>
-                        <TooltipTrigger asChild>
-                          <span className="text-sm text-gray-500 cursor-help">ⓘ</span>
-                        </TooltipTrigger>
-                        <TooltipContent>
-                          <p>Collect images and media files that may need localization (e.g., images with text, PDFs).</p>
-                        </TooltipContent>
-                      </Tooltip>
-                    </div>
-
-                    <div className="flex items-center space-x-2">
-                      <Checkbox
-                        id="collectErrorPages"
+                      <div>
+                        <span className="text-sm font-medium text-gray-700">HTML pages</span>
+                        <span className="text-xs text-gray-500 block mt-0.5">
+                          Main content of your website
+                        </span>
+                      </div>
+                    </label>
+                    <label className="flex items-start space-x-3">
+                      <input
+                        type="checkbox"
                         checked={crawlData.additionalSettings.collectResources.errorPages}
-                        onCheckedChange={() => handleResourceToggle("errorPages")}
+                        onChange={(e) => toggleResourceCollection("errorPages")}
+                        className="mt-0.5 h-4 w-4 text-blue-600 border-gray-300"
                       />
-                      <label htmlFor="collectErrorPages" className="text-sm text-gray-600">
-                        Error Pages (4XX)
-                      </label>
-                      <Tooltip>
-                        <TooltipTrigger asChild>
-                          <span className="text-sm text-gray-500 cursor-help">ⓘ</span>
-                        </TooltipTrigger>
-                        <TooltipContent>
-                          <p>Collect error pages (like 404 pages) that may need translation.</p>
-                        </TooltipContent>
-                      </Tooltip>
-                    </div>
+                      <div>
+                        <span className="text-sm font-medium text-gray-700">Error pages</span>
+                        <span className="text-xs text-gray-500 block mt-0.5">
+                          404 and other error pages
+                        </span>
+                      </div>
+                    </label>
+                  </div>
+                </div>
 
-                    <div className="flex items-center space-x-2">
-                      <Checkbox
-                        id="collectRedirectionPages"
-                        checked={crawlData.additionalSettings.collectResources.redirectionPages}
-                        onCheckedChange={() => handleResourceToggle("redirectionPages")}
+                <div className="space-y-4">
+                  <h4 className="text-sm font-medium text-gray-700">Additional resources</h4>
+                  <div className="space-y-3">
+                    <label className="flex items-start space-x-3">
+                      <input
+                        type="checkbox"
+                        checked={crawlData.additionalSettings.collectResources.codeStyleFiles}
+                        onChange={(e) => toggleResourceCollection("codeStyleFiles")}
+                        className="mt-0.5 h-4 w-4 text-blue-600 border-gray-300"
                       />
-                      <label htmlFor="collectRedirectionPages" className="text-sm text-gray-600">
-                        Redirect Pages (3XX)
-                      </label>
-                      <Tooltip>
-                        <TooltipTrigger asChild>
-                          <span className="text-sm text-gray-500 cursor-help">ⓘ</span>
-                        </TooltipTrigger>
-                        <TooltipContent>
-                          <p>Collect redirection pages that may contain translatable content.</p>
-                        </TooltipContent>
-                      </Tooltip>
-                    </div>
-                  </TooltipProvider>
+                      <div>
+                        <span className="text-sm font-medium text-gray-700">Code & style files</span>
+                        <span className="text-xs text-gray-500 block mt-0.5">
+                          JavaScript and CSS files
+                        </span>
+                      </div>
+                    </label>
+                    <label className="flex items-start space-x-3">
+                      <input
+                        type="checkbox"
+                        checked={crawlData.additionalSettings.collectResources.imagesFiles}
+                        onChange={(e) => toggleResourceCollection("imagesFiles")}
+                        className="mt-0.5 h-4 w-4 text-blue-600 border-gray-300"
+                      />
+                      <div>
+                        <span className="text-sm font-medium text-gray-700">Image files</span>
+                        <span className="text-xs text-gray-500 block mt-0.5">
+                          PNG, JPG, SVG and other images
+                        </span>
+                      </div>
+                    </label>
+                  </div>
                 </div>
               </div>
             </div>
@@ -231,131 +183,218 @@ export function AdditionalSettingsStep({ crawlData, updateCrawlData }: Additiona
               </TooltipProvider>
             </div>
 
-            <div className="p-4 bg-gray-50 rounded-lg space-y-4">
-              <div className="flex items-center justify-between">
-                <div className="flex items-center space-x-2">
-                  <Switch
-                    id="useCrest"
+            <div className="p-6 border border-gray-200 bg-white space-y-6">
+              <div className="space-y-4">
+                <label className="flex items-start space-x-3">
+                  <input
+                    type="checkbox"
                     checked={crawlData.additionalSettings.useCrest}
-                    onCheckedChange={toggleUseCrest}
+                    onChange={(e) => toggleUseCrest(e.target.checked)}
+                    className="mt-0.5 h-4 w-4 text-blue-600 border-gray-300"
                   />
                   <div>
-                    <label htmlFor="useCrest" className="text-sm font-medium text-gray-900">
-                      Enable JavaScript Processing
-                    </label>
-                    <p className="text-xs text-gray-500">
-                      Use our JavaScript engine to process dynamic content
-                    </p>
+                    <div className="flex items-center space-x-2">
+                      <span className="text-sm font-medium text-gray-700">Enable JavaScript processing</span>
+                      <span className="px-2 py-0.5 text-xs font-medium bg-blue-100 text-blue-800">Recommended</span>
+                    </div>
+                    <span className="text-xs text-gray-500 block mt-0.5">
+                      Process JavaScript-rendered content for more accurate results
+                    </span>
                   </div>
-                </div>
-                <TooltipProvider>
-                  <Tooltip>
-                    <TooltipTrigger asChild>
-                      <span className="text-sm text-gray-500 cursor-help">ⓘ</span>
-                    </TooltipTrigger>
-                    <TooltipContent>
-                      <p>Enable this for sites that load content dynamically using JavaScript.</p>
-                    </TooltipContent>
-                  </Tooltip>
-                </TooltipProvider>
-              </div>
+                </label>
 
-              <div className="flex items-center justify-between pl-6">
-                <div className="flex items-center space-x-2">
-                  <Switch
-                    id="prerenderPages"
-                    checked={crawlData.additionalSettings.prerenderPages}
-                    onCheckedChange={togglePrerenderPages}
-                    disabled={!crawlData.additionalSettings.useCrest}
-                  />
-                  <div>
-                    <label htmlFor="prerenderPages" className="text-sm font-medium text-gray-900">
-                      Pre-render Pages
-                    </label>
-                    <p className="text-xs text-gray-500">
-                      Wait for JavaScript content to load before crawling
-                    </p>
-                  </div>
-                </div>
-                <TooltipProvider>
-                  <Tooltip>
-                    <TooltipTrigger asChild>
-                      <span className="text-sm text-gray-500 cursor-help">ⓘ</span>
-                    </TooltipTrigger>
-                    <TooltipContent>
-                      <p>Ensures all dynamic content is loaded before crawling. This makes crawling slower but more thorough.</p>
-                    </TooltipContent>
-                  </Tooltip>
-                </TooltipProvider>
+                {crawlData.additionalSettings.useCrest && (
+                  <label className="flex items-start space-x-3 ml-7">
+                    <input
+                      type="checkbox"
+                      checked={crawlData.additionalSettings.prerenderPages}
+                      onChange={(e) => togglePrerenderPages()}
+                      className="mt-0.5 h-4 w-4 text-blue-600 border-gray-300"
+                    />
+                    <div>
+                      <span className="text-sm font-medium text-gray-700">Pre-render pages</span>
+                      <span className="text-xs text-gray-500 block mt-0.5">
+                        Wait for full page load before processing
+                      </span>
+                    </div>
+                  </label>
+                )}
               </div>
             </div>
           </div>
 
-          <Accordion type="single" collapsible className="w-full">
-            <AccordionItem value="advanced-settings">
-              <AccordionTrigger>Advanced Settings</AccordionTrigger>
-              <AccordionContent>
-                <div className="space-y-6 mt-4">
-                  <div className="space-y-4">
-                    <h4 className="text-sm font-medium text-gray-700">Custom User Agent</h4>
-                    <p className="text-sm text-gray-600">
-                      Optionally override the crawler's default user agent with one of your choice. This is useful if you
-                      want to be able to separate crawler traffic at your server.
-                    </p>
-                    <input
-                      type="text"
-                      value={crawlData.additionalSettings.userAgent}
-                      onChange={(e) =>
-                        updateCrawlData({
-                          additionalSettings: { ...crawlData.additionalSettings, userAgent: e.target.value },
-                        })
-                      }
-                      placeholder="Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/132.0.0.0 Safari/537.36"
-                      className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2 text-sm"
-                    />
-                  </div>
+          <section className="space-y-4">
+            <h3 className="text-lg font-medium text-gray-800">Advanced settings</h3>
+            <div className="border border-gray-200 bg-white">
+              <Accordion type="single" collapsible>
+                <AccordionItem value="advanced-settings">
+                  <AccordionTrigger className="px-6 py-4 hover:no-underline">
+                    <div className="flex items-center space-x-2">
+                      <span className="text-sm font-medium text-gray-900">Authentication & Crawl Settings</span>
+                      <span className="text-xs text-gray-500">(Advanced)</span>
+                    </div>
+                  </AccordionTrigger>
+                  <AccordionContent>
+                    <div className="p-6 border-t border-gray-100 space-y-6">
+                      {/* Authentication Section */}
+                      <div className="space-y-4">
+                        <h4 className="text-sm font-medium text-gray-900">Authentication</h4>
+                        
+                        <div className="space-y-4">
+                          <div>
+                            <div className="flex items-center space-x-2 mb-2">
+                              <label className="text-sm font-medium text-gray-700">User Agent</label>
+                              <TooltipProvider>
+                                <Tooltip>
+                                  <TooltipTrigger>
+                                    <span className="inline-flex items-center justify-center w-4 h-4 text-xs font-bold text-blue-600 bg-blue-100">?</span>
+                                  </TooltipTrigger>
+                                  <TooltipContent side="right" className="p-3 max-w-xs">
+                                    <p className="text-sm">Identifies your crawler to websites:</p>
+                                    <ul className="list-disc ml-4 mt-1 text-xs space-y-1">
+                                      <li>Leave empty to use default Lokalise crawler</li>
+                                      <li>Custom format: BrandName/1.0</li>
+                                    </ul>
+                                  </TooltipContent>
+                                </Tooltip>
+                              </TooltipProvider>
+                            </div>
+                            <input
+                              type="text"
+                              value={crawlData.additionalSettings.userAgent}
+                              onChange={(e) =>
+                                updateCrawlData({
+                                  additionalSettings: { ...crawlData.additionalSettings, userAgent: e.target.value },
+                                })
+                              }
+                              placeholder="MyCompany/1.0"
+                              className="w-full p-2 border border-gray-200 text-sm"
+                            />
+                          </div>
 
-                  <div className="space-y-4">
-                    <h4 className="text-sm font-medium text-gray-700">Session Cookie</h4>
-                    <p className="text-sm text-gray-600">
-                      Login areas on a site keep track of user sessions via cookies. Extract these cookies and pass them to
-                      the crawler to access these website areas.
-                    </p>
-                    <input
-                      type="text"
-                      value={crawlData.additionalSettings.sessionCookie}
-                      onChange={(e) =>
-                        updateCrawlData({
-                          additionalSettings: { ...crawlData.additionalSettings, sessionCookie: e.target.value },
-                        })
-                      }
-                      placeholder="e.g PHPSESSID=xegpzebddfejxzuvqzpq"
-                      className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2 text-sm"
-                    />
-                  </div>
+                          <div>
+                            <div className="flex items-center space-x-2 mb-2">
+                              <label className="text-sm font-medium text-gray-700">Session Cookie</label>
+                              <TooltipProvider>
+                                <Tooltip>
+                                  <TooltipTrigger>
+                                    <span className="inline-flex items-center justify-center w-4 h-4 text-xs font-bold text-blue-600 bg-blue-100">?</span>
+                                  </TooltipTrigger>
+                                  <TooltipContent side="right" className="p-3 max-w-xs">
+                                    <p className="text-sm">Required for authenticated pages:</p>
+                                    <ul className="list-disc ml-4 mt-1 text-xs space-y-1">
+                                      <li>Find in browser DevTools > Application > Cookies</li>
+                                      <li>Usually named 'session' or 'PHPSESSID'</li>
+                                    </ul>
+                                  </TooltipContent>
+                                </Tooltip>
+                              </TooltipProvider>
+                            </div>
+                            <input
+                              type="text"
+                              value={crawlData.additionalSettings.sessionCookie}
+                              onChange={(e) =>
+                                updateCrawlData({
+                                  additionalSettings: { ...crawlData.additionalSettings, sessionCookie: e.target.value },
+                                })
+                              }
+                              placeholder="PHPSESSID=abc123..."
+                              className="w-full p-2 border border-gray-200 text-sm"
+                            />
+                          </div>
 
-                  <div className="space-y-4">
-                    <h4 className="text-sm font-medium text-gray-700">Bearer Token</h4>
-                    <p className="text-sm text-gray-600">
-                      Bearer tokens can be used to access protected resources. You can extract this token from your
-                      project's preview link by opening DevTools and copying the value of the Authorization header.
-                    </p>
-                    <input
-                      type="text"
-                      value={crawlData.additionalSettings.bearerToken}
-                      onChange={(e) =>
-                        updateCrawlData({
-                          additionalSettings: { ...crawlData.additionalSettings, bearerToken: e.target.value },
-                        })
-                      }
-                      placeholder="Bearer BQD0AGyylarlqiDrpzikCwS5"
-                      className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2 text-sm"
-                    />
-                  </div>
-                </div>
-              </AccordionContent>
-            </AccordionItem>
-          </Accordion>
+                          <div>
+                            <div className="flex items-center space-x-2 mb-2">
+                              <label className="text-sm font-medium text-gray-700">Bearer Token</label>
+                              <TooltipProvider>
+                                <Tooltip>
+                                  <TooltipTrigger>
+                                    <span className="inline-flex items-center justify-center w-4 h-4 text-xs font-bold text-blue-600 bg-blue-100">?</span>
+                                  </TooltipTrigger>
+                                  <TooltipContent side="right" className="p-3 max-w-xs">
+                                    <p className="text-sm">For API authentication:</p>
+                                    <ul className="list-disc ml-4 mt-1 text-xs space-y-1">
+                                      <li>Find in browser DevTools > Network</li>
+                                      <li>Look for 'Authorization: Bearer' header</li>
+                                    </ul>
+                                  </TooltipContent>
+                                </Tooltip>
+                              </TooltipProvider>
+                            </div>
+                            <input
+                              type="text"
+                              value={crawlData.additionalSettings.bearerToken}
+                              onChange={(e) =>
+                                updateCrawlData({
+                                  additionalSettings: { ...crawlData.additionalSettings, bearerToken: e.target.value },
+                                })
+                              }
+                              placeholder="Bearer eyJhbGc..."
+                              className="w-full p-2 border border-gray-200 text-sm"
+                            />
+                          </div>
+                        </div>
+                      </div>
+
+                      {/* Recurring Crawl Section */}
+                      <div className="space-y-4 pt-4 border-t border-gray-100">
+                        <div className="flex items-center justify-between">
+                          <h4 className="text-sm font-medium text-gray-900">Recurring Crawl</h4>
+                          <TooltipProvider>
+                            <Tooltip>
+                              <TooltipTrigger>
+                                <span className="inline-flex items-center justify-center w-4 h-4 text-xs font-bold text-blue-600 bg-blue-100">?</span>
+                              </TooltipTrigger>
+                              <TooltipContent side="right" className="p-3 max-w-xs">
+                                <p className="text-sm">Automatically repeat this crawl on a schedule to keep content in sync</p>
+                              </TooltipContent>
+                            </Tooltip>
+                          </TooltipProvider>
+                        </div>
+
+                        <div className="space-y-4">
+                          <label className="flex items-start space-x-3">
+                            <input
+                              type="checkbox"
+                              checked={crawlData.additionalSettings.enableRecurringCrawl}
+                              onChange={(e) =>
+                                updateCrawlData({
+                                  additionalSettings: { ...crawlData.additionalSettings, enableRecurringCrawl: e.target.checked },
+                                })
+                              }
+                              className="mt-0.5 h-4 w-4 text-blue-600 border-gray-300"
+                            />
+                            <span className="text-sm text-gray-700">Enable recurring crawl</span>
+                          </label>
+
+                          {crawlData.additionalSettings.enableRecurringCrawl && (
+                            <div className="ml-7">
+                              <label className="text-sm font-medium text-gray-700 block mb-2">
+                                Frequency
+                              </label>
+                              <select
+                                value={crawlData.additionalSettings.crawlFrequency}
+                                onChange={(e) =>
+                                  updateCrawlData({
+                                    additionalSettings: { ...crawlData.additionalSettings, crawlFrequency: e.target.value },
+                                  })
+                                }
+                                className="w-full p-2 border border-gray-200 text-sm bg-white"
+                              >
+                                <option value="daily">Daily</option>
+                                <option value="weekly">Weekly</option>
+                                <option value="monthly">Monthly</option>
+                              </select>
+                            </div>
+                          )}
+                        </div>
+                      </div>
+                    </div>
+                  </AccordionContent>
+                </AccordionItem>
+              </Accordion>
+            </div>
+          </section>
         </div>
       </div>
     </div>

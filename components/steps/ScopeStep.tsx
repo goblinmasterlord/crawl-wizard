@@ -128,7 +128,7 @@ export function ScopeStep({ crawlData, updateCrawlData }: ScopeStepProps) {
               <textarea
                 value={crawlData.specificPages.join("\n")}
                 onChange={handleSpecificPagesChange}
-                placeholder="https://example.com/page1\nhttps://example.com/page2"
+                placeholder="https://example.com/page1&#10;https://example.com/page2"
                 className="w-full h-32 p-2 border border-gray-200 text-sm mb-2"
               />
               <p className="text-xs text-gray-500">Enter one URL per line</p>
@@ -187,7 +187,7 @@ export function ScopeStep({ crawlData, updateCrawlData }: ScopeStepProps) {
               <textarea
                 value={crawlData.excludedPages.join("\n")}
                 onChange={handleExcludedPagesChange}
-                placeholder="https://example.com/skip-this\n*.pdf"
+                placeholder="https://example.com/skip-this&#10;*.pdf"
                 className="w-full h-32 p-2 border border-gray-200 text-sm"
               />
             </>
@@ -269,7 +269,7 @@ export function ScopeStep({ crawlData, updateCrawlData }: ScopeStepProps) {
                         <textarea
                           value={crawlData.additionalSettings.excludeUrls?.join("\n") || ""}
                           onChange={handleExcludeUrlsChange}
-                          placeholder="/blog/*\n^/admin/.*$\n*.pdf"
+                          placeholder="/blog/*&#10;^/admin/.*$&#10;*.pdf"
                           className="w-full h-32 p-2 border border-gray-200 text-sm"
                         />
                         <p className="mt-1 text-xs text-gray-500">
