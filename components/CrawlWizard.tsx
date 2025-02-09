@@ -110,10 +110,6 @@ export function CrawlWizard({ isOpen, onClose }: CrawlWizardProps) {
         <div className="flex h-[85vh]">
           {/* Sidebar */}
           <div className="w-80 bg-gray-50 border-r border-gray-100">
-            <div className="p-6 border-b border-gray-100">
-              <h1 className="text-xl font-semibold text-gray-900">Crawl Wizard</h1>
-              <p className="mt-1 text-sm text-gray-500">Configure your website crawl</p>
-            </div>
             <ProgressBar currentStep={currentStep} totalSteps={steps.length} steps={steps} />
           </div>
 
@@ -122,10 +118,8 @@ export function CrawlWizard({ isOpen, onClose }: CrawlWizardProps) {
             {/* Header */}
             <div className="px-8 py-6 border-b border-gray-100">
               <div className="max-w-3xl mx-auto">
-                <h2 className="text-xl font-semibold text-gray-900">
-                  {steps[currentStep - 1].title}
-                </h2>
-                <p className="mt-1 text-sm text-gray-500">{currentStepDescription}</p>
+                <h1 className="text-xl font-semibold text-gray-900">Crawl Wizard</h1>
+                <h2 className="mt-2 text-lg text-gray-700">{steps[currentStep - 1].title}</h2>
               </div>
             </div>
 
