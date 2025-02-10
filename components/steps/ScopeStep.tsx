@@ -161,7 +161,26 @@ export function ScopeStep({ crawlData, updateCrawlData }: ScopeStepProps) {
 
       {/* Additional Settings */}
       <section className="space-y-4">
-        <h3 className="text-lg font-medium text-gray-800">Additional crawl settings</h3>
+        <h3 className="text-lg font-medium text-gray-800">Crawl controls</h3>
+
+        {crawlData.scope === "all" && (
+          <div className="p-4 border border-gray-200 bg-white">
+            <label className="flex items-center space-x-3">
+              <input
+                type="checkbox"
+                checked={crawlData.checkNewPages}
+                onChange={handleCheckNewPages}
+                className="h-4 w-4 text-blue-600 border-gray-300"
+              />
+              <div>
+                <span className="text-sm font-medium text-gray-700">Check for new pages</span>
+                <span className="text-xs text-gray-500 block mt-0.5">
+                  The crawler will look for pages not found in previous scans
+                </span>
+              </div>
+            </label>
+          </div>
+        )}
 
         <div className="p-4 border border-gray-200 bg-white space-y-4">
           <h4 className="text-sm font-medium text-gray-700 mb-3">Crawl optimizations</h4>
@@ -210,25 +229,6 @@ export function ScopeStep({ crawlData, updateCrawlData }: ScopeStepProps) {
             </div>
           </label>
         </div>
-
-        {crawlData.scope === "all" && (
-          <div className="p-4 border border-gray-200 bg-white">
-            <label className="flex items-center space-x-3">
-              <input
-                type="checkbox"
-                checked={crawlData.checkNewPages}
-                onChange={handleCheckNewPages}
-                className="h-4 w-4 text-blue-600 border-gray-300"
-              />
-              <div>
-                <span className="text-sm font-medium text-gray-700">Check for new pages</span>
-                <span className="text-xs text-gray-500 block mt-0.5">
-                  The crawler will look for pages not found in previous scans
-                </span>
-              </div>
-            </label>
-          </div>
-        )}
 
         {crawlData.scope === "all" && (
           <div className="p-4 border border-gray-200 bg-white">
