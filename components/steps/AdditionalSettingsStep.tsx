@@ -2,8 +2,6 @@
 
 import { useEffect, useRef } from "react"
 import type { CrawlData } from "../CrawlWizard"
-import { Switch } from "@/components/ui/switch"
-import { Checkbox } from "@/components/ui/checkbox"
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion"
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip"
 import { cn } from "@/lib/utils"
@@ -32,35 +30,6 @@ export function AdditionalSettingsStep({ crawlData, updateCrawlData, crawlType }
     })
   }
 
-  const toggleRecurringCrawl = () => {
-    updateCrawlData({
-      additionalSettings: {
-        ...crawlData.additionalSettings,
-        enableRecurringCrawl: !crawlData.additionalSettings.enableRecurringCrawl,
-      },
-    })
-  }
-
-  const togglePrerenderPages = () => {
-    updateCrawlData({
-      additionalSettings: {
-        ...crawlData.additionalSettings,
-        prerenderPages: !crawlData.additionalSettings.prerenderPages,
-        useCrest: !crawlData.additionalSettings.prerenderPages || crawlData.additionalSettings.useCrest,
-      },
-    })
-  }
-
-  const toggleUseCrest = (checked: boolean) => {
-    updateCrawlData({
-      additionalSettings: {
-        ...crawlData.additionalSettings,
-        useCrest: checked,
-        prerenderPages: checked ? crawlData.additionalSettings.prerenderPages : false,
-      },
-    })
-  }
-
   const toggleResourceCollection = (resource: keyof CrawlData["additionalSettings"]["collectResources"]) => {
     updateCrawlData({
       additionalSettings: {
@@ -85,9 +54,9 @@ export function AdditionalSettingsStep({ crawlData, updateCrawlData, crawlType }
           ...crawlData.additionalSettings,
           prerenderPages: false,
         },
-      })
+      });
     }
-  }, [crawlData.additionalSettings.useCrest]);
+  }, [crawlData.additionalSettings.useCrest, crawlData.additionalSettings, updateCrawlData]);
 
   return (
     <div className="space-y-8 max-w-4xl mx-auto">
@@ -115,7 +84,7 @@ export function AdditionalSettingsStep({ crawlData, updateCrawlData, crawlType }
                   <input
                     type="checkbox"
                     checked={crawlData.additionalSettings.collectResources.htmlPages}
-                    onChange={(e) => toggleResourceCollection("htmlPages")}
+                    onChange={() => toggleResourceCollection("htmlPages")}
                     className="mt-0.5 h-4 w-4 text-blue-600 border-gray-300"
                   />
                   <div>
@@ -146,7 +115,7 @@ export function AdditionalSettingsStep({ crawlData, updateCrawlData, crawlType }
                     <input
                       type="checkbox"
                       checked={crawlData.additionalSettings.collectResources.codeStyleFiles}
-                      onChange={(e) => toggleResourceCollection("codeStyleFiles")}
+                      onChange={() => toggleResourceCollection("codeStyleFiles")}
                       className="mt-0.5 h-4 w-4 text-blue-600 border-gray-300"
                     />
                     <div>
@@ -160,7 +129,7 @@ export function AdditionalSettingsStep({ crawlData, updateCrawlData, crawlType }
                     <input
                       type="checkbox"
                       checked={crawlData.additionalSettings.collectResources.imagesFiles}
-                      onChange={(e) => toggleResourceCollection("imagesFiles")}
+                      onChange={() => toggleResourceCollection("imagesFiles")}
                       className="mt-0.5 h-4 w-4 text-blue-600 border-gray-300"
                     />
                     <div>
@@ -192,7 +161,7 @@ export function AdditionalSettingsStep({ crawlData, updateCrawlData, crawlType }
                     <input
                       type="checkbox"
                       checked={crawlData.additionalSettings.collectResources.errorPages}
-                      onChange={(e) => toggleResourceCollection("errorPages")}
+                      onChange={() => toggleResourceCollection("errorPages")}
                       className="mt-0.5 h-4 w-4 text-blue-600 border-gray-300"
                     />
                     <div>
@@ -206,7 +175,7 @@ export function AdditionalSettingsStep({ crawlData, updateCrawlData, crawlType }
                     <input
                       type="checkbox"
                       checked={crawlData.additionalSettings.collectResources.redirectionPages}
-                      onChange={(e) => toggleResourceCollection("redirectionPages")}
+                      onChange={() => toggleResourceCollection("redirectionPages")}
                       className="mt-0.5 h-4 w-4 text-blue-600 border-gray-300"
                     />
                     <div>
@@ -364,7 +333,7 @@ export function AdditionalSettingsStep({ crawlData, updateCrawlData, crawlType }
                                   <p className="text-sm">Required for authenticated pages:</p>
                                   <ul className="list-disc ml-4 mt-1 text-xs space-y-1">
                                     <li>Find in browser DevTools {`>`} Application {`>`} Cookies</li>
-                                    <li>Usually named 'session' or 'PHPSESSID'</li>
+                                    <li>Usually named &apos;session&apos; or &apos;PHPSESSID&apos;</li>
                                   </ul>
                                 </TooltipContent>
                               </Tooltip>
@@ -395,7 +364,7 @@ export function AdditionalSettingsStep({ crawlData, updateCrawlData, crawlType }
                                   <p className="text-sm">For API authentication:</p>
                                   <ul className="list-disc ml-4 mt-1 text-xs space-y-1">
                                     <li>Find in browser DevTools {`>`} Network</li>
-                                    <li>Look for 'Authorization: Bearer' header</li>
+                                    <li>Look for &apos;Authorization: Bearer&apos; header</li>
                                   </ul>
                                 </TooltipContent>
                               </Tooltip>
