@@ -205,7 +205,7 @@ export function ScopeStep({ crawlData, updateCrawlData }: ScopeStepProps) {
             <div>
               <span className="text-sm font-medium text-gray-700">Skip existing resources</span>
               <span className="text-xs text-gray-500 block mt-0.5">
-                Don't re-crawl resources that were already collected in previous crawls
+                Don&apos;t re-crawl resources that were already collected in previous crawls
               </span>
             </div>
           </label>

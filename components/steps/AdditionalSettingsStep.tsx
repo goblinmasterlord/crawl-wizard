@@ -363,7 +363,7 @@ export function AdditionalSettingsStep({ crawlData, updateCrawlData, crawlType }
                                 <TooltipContent side="right" className="p-3 max-w-xs">
                                   <p className="text-sm">Required for authenticated pages:</p>
                                   <ul className="list-disc ml-4 mt-1 text-xs space-y-1">
-                                    <li>Find in browser DevTools > Application > Cookies</li>
+                                    <li>Find in browser DevTools {`>`} Application {`>`} Cookies</li>
                                     <li>Usually named 'session' or 'PHPSESSID'</li>
                                   </ul>
                                 </TooltipContent>
@@ -394,7 +394,7 @@ export function AdditionalSettingsStep({ crawlData, updateCrawlData, crawlType }
                                 <TooltipContent side="right" className="p-3 max-w-xs">
                                   <p className="text-sm">For API authentication:</p>
                                   <ul className="list-disc ml-4 mt-1 text-xs space-y-1">
-                                    <li>Find in browser DevTools > Network</li>
+                                    <li>Find in browser DevTools {`>`} Network</li>
                                     <li>Look for 'Authorization: Bearer' header</li>
                                   </ul>
                                 </TooltipContent>
