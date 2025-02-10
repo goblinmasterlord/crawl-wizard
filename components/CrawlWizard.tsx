@@ -46,27 +46,6 @@ interface CrawlWizardProps {
   onClose: () => void
 }
 
-type BaseStepProps = {
-  crawlData: CrawlData;
-  updateCrawlData: (newData: Partial<CrawlData>) => void;
-};
-
-type StepComponent<T = {}> = React.ComponentType<BaseStepProps & T>;
-
-type StepConfig = 
-  | { title: string; component: typeof CrawlTypeStep }
-  | { title: string; component: typeof ScopeStep }
-  | { 
-      title: string; 
-      component: typeof AdditionalSettingsStep;
-      getProps: (data: CrawlData) => { crawlType: "discovery" | "content-extraction" };
-    }
-  | { 
-      title: string; 
-      component: typeof SummaryStep;
-      getProps?: never;
-    };
-
 export function CrawlWizard({ isOpen, onClose }: CrawlWizardProps) {
   const [currentStep, setCurrentStep] = useState(1)
   const [crawlData, setCrawlData] = useState<CrawlData>({
