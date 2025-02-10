@@ -9,7 +9,7 @@ import { cn } from "@/lib/utils"
 interface AdditionalSettingsStepProps {
   crawlData: CrawlData
   updateCrawlData: (newData: Partial<CrawlData>) => void
-  crawlType: "discovery" | "content-extraction"
+  crawlType?: "discovery" | "content-extraction"
 }
 
 const AdvancedTag = () => (
@@ -23,7 +23,11 @@ const AdvancedTag = () => (
   </div>
 );
 
-export function AdditionalSettingsStep({ crawlData, updateCrawlData, crawlType }: AdditionalSettingsStepProps) {
+export function AdditionalSettingsStep({ 
+  crawlData, 
+  updateCrawlData, 
+  crawlType = crawlData.crawlType === "content-extraction" ? "content-extraction" : "discovery" 
+}: AdditionalSettingsStepProps) {
   const handleFrequencyChange = (frequency: "daily" | "weekly" | "monthly") => {
     updateCrawlData({
       additionalSettings: { ...crawlData.additionalSettings, crawlFrequency: frequency },

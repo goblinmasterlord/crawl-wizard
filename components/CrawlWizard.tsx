@@ -46,6 +46,27 @@ interface CrawlWizardProps {
   onClose: () => void
 }
 
+type BaseStepProps = {
+  crawlData: CrawlData;
+  updateCrawlData: (newData: Partial<CrawlData>) => void;
+};
+
+type StepComponent<T = {}> = React.ComponentType<BaseStepProps & T>;
+
+type StepConfig = 
+  | { title: string; component: typeof CrawlTypeStep }
+  | { title: string; component: typeof ScopeStep }
+  | { 
+      title: string; 
+      component: typeof AdditionalSettingsStep;
+      getProps: (data: CrawlData) => { crawlType: "discovery" | "content-extraction" };
+    }
+  | { 
+      title: string; 
+      component: typeof SummaryStep;
+      getProps?: never;
+    };
+
 export function CrawlWizard({ isOpen, onClose }: CrawlWizardProps) {
   const [currentStep, setCurrentStep] = useState(1)
   const [crawlData, setCrawlData] = useState<CrawlData>({
@@ -121,7 +142,7 @@ export function CrawlWizard({ isOpen, onClose }: CrawlWizardProps) {
         <div className="flex h-[85vh]">
           {/* Sidebar */}
           <div className="w-80 bg-gray-50 border-r border-gray-100">
-            <ProgressBar currentStep={currentStep} totalSteps={steps.length} steps={steps} />
+            <ProgressBar currentStep={currentStep} steps={steps} />
           </div>
 
           {/* Main content */}
@@ -143,7 +164,7 @@ export function CrawlWizard({ isOpen, onClose }: CrawlWizardProps) {
                 <CurrentStepComponent 
                   crawlData={crawlData} 
                   updateCrawlData={updateCrawlData} 
-                  onEdit={goToStep} 
+                  onEdit={goToStep}
                 />
               </div>
             </div>
